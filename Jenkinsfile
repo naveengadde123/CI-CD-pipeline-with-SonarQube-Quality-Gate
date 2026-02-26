@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        sonarRunner 'SonarScanner'
+        hudson.plugins.sonar.SonarRunnerInstallation 'SonarScanner'
     }
 
     environment {
@@ -41,7 +41,7 @@ pipeline {
             echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed. Please check SonarQube analysis.'
+            echo 'Pipeline failed. Check SonarQube logs.'
         }
     }
 }
