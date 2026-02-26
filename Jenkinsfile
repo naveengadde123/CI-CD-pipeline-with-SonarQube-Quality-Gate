@@ -1,14 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        hudson.plugins.sonar.SonarRunnerInstallation 'SonarScanner'
-    }
-
-    environment {
-        SCANNER_HOME = tool 'SonarScanner'
-    }
-
     stages {
 
         stage('Checkout') {
@@ -19,10 +11,11 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube-Server') {
-                    sh '''
-                        $SCANNER_HOME/bin/sonar-scanner
-                    '''
+                script {
+                    def scannerHome = tool 'SonarScanner'
+                    withSonarQubeEnv('SonarQube-Server') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
                 }
             }
         }
@@ -41,7 +34,7 @@ pipeline {
             echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed. Check SonarQube logs.'
+            echo 'Pipeline failed. Check SonarQube analysis.'
         }
     }
 }
